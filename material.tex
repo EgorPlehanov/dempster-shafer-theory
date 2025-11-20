@@ -1,0 +1,134 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T2A]{fontenc}
+\usepackage[russian]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{geometry}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\geometry{left=2cm,right=2cm,top=2cm,bottom=2cm}
+
+\begin{document}
+
+\begin{center}
+\textbf{РАЗДАТОЧНЫЙ МАТЕРИАЛ} \\
+\textbf{Теория Демпстера-Шейфера} \\
+Основные термины и формулы \\
+Студент: Плеханов Е.С., группа 5140903/40101
+\end{center}
+
+\section*{Основные понятия}
+
+\begin{itemize}
+\item \textbf{Фрейм discernment}: $\Omega = \{\omega_1, \omega_2, \dots, \omega_n\}$
+\item \textbf{Базовая вероятность (BPA)}: $m: 2^{\Omega} \rightarrow [0,1]$
+\item \textbf{Функция доверия}: $\text{Bel}(A) = \sum_{B \subseteq A} m(B)$
+\item \textbf{Функция правдоподобия}: $\text{Pl}(A) = \sum_{B \cap A \neq \emptyset} m(B)$
+\item \textbf{Интервал вероятности}: $[\text{Bel}(A), \text{Pl}(A)]$
+\end{itemize}
+
+\section*{Правило комбинирования Демпстера}
+
+\begin{algorithm}
+\caption{Правило Демпстера}
+\begin{algorithmic}[1]
+\Require Две BPA: $m_1$ и $m_2$
+\Ensure Комбинированная BPA: $m_{12}$
+\State $K \gets 0$
+\For{всех $B$ в фокальных элементах $m_1$}
+    \For{всех $C$ в фокальных элементах $m_2$}
+        \If {$B \cap C = \emptyset$}
+            \State $K \gets K + m_1(B) \cdot m_2(C)$
+        \EndIf
+    \EndFor
+\EndFor
+\State $Z \gets 1 - K$
+\For{всех непустых $A \neq \emptyset$}
+    \State $m_{12}(A) \gets 0$
+    \For{всех пар $(B,C)$: $B \cap C = A$}
+        \State $m_{12}(A) \gets m_{12}(A) + m_1(B) \cdot m_2(C)$
+    \EndFor
+    \State $m_{12}(A) \gets m_{12}(A) / Z$
+\EndFor
+\State \Return $m_{12}$
+\end{algorithmic}
+\end{algorithm}
+
+\section*{Правило Ягера}
+
+\begin{algorithm}
+\caption{Правило Ягера}
+\begin{algorithmic}[1]
+\Require Две BPA: $m_1$ и $m_2$
+\Ensure Комбинированная BPA: $m_{Yag}$
+\For{всех $B$ в фокальных элементах $m_1$}
+    \For{всех $C$ в фокальных элементах $m_2$}
+        \State $A \gets B \cap C$
+        \If {$A \neq \emptyset$}
+            \State $m_{Yag}(A) \gets m_{Yag}(A) + m_1(B) \cdot m_2(C)$
+        \Else
+            \State $m_{Yag}(\Omega) \gets m_{Yag}(\Omega) + m_1(B) \cdot m_2(C)$
+        \EndIf
+    \EndFor
+\EndFor
+\State \Return $m_{Yag}$
+\end{algorithmic}
+\end{algorithm}
+
+\section*{Пример 2.1: Кандидаты на должность}
+
+\textbf{Данные:} $\Omega = \{1,2,3,4\}$, $N=10$ экспертов
+
+\begin{tabular}{|l|c|c|}
+\hline
+Мнение экспертов & Множество & m(A) \\
+\hline
+``Кандидат 1'' & $\{1\}$ & 0.5 \\
+``Кандидат 1 или 2'' & $\{1,2\}$ & 0.2 \\
+``Кандидат 3'' & $\{3\}$ & 0.3 \\
+\hline
+\end{tabular}
+
+\textbf{Результаты:}
+\begin{itemize}
+\item Кандидат 1: $\text{Bel}=0.5$, $\text{Pl}=0.7$, $[0.5, 0.7]$
+\item Кандидат 2: $\text{Bel}=0.0$, $\text{Pl}=0.2$, $[0.0, 0.2]$
+\item Кандидат 3: $\text{Bel}=0.3$, $\text{Pl}=0.3$, $[0.3, 0.3]$
+\item Кандидат 4: $\text{Bel}=0.0$, $\text{Pl}=0.0$, $[0.0, 0.0]$
+\end{itemize}
+
+\section*{Пример 2.6: Комбинирование свидетельств}
+
+\textbf{Источник 1:} $m_1(\{1\})=0.625$, $m_1(\{2,3\})=0.375$
+
+\textbf{Источник 2:} $m_2(\{1,2\})=0.5$, $m_2(\{3\})=0.4375$, $m_2(\{4\})=0.0625$
+
+\textbf{Конфликт:} $K = 0.336$
+
+\textbf{Результат Демпстера:}
+\begin{itemize}
+\item $m_{12}(\{1\}) = 0.4706$
+\item $m_{12}(\{2\}) = 0.2824$
+\item $m_{12}(\{3\}) = 0.2470$
+\end{itemize}
+
+\textbf{Результат Ягера:}
+\begin{itemize}
+\item $m_{Yag}(\{1\}) = 0.3125$
+\item $m_{Yag}(\{2\}) = 0.1875$
+\item $m_{Yag}(\{3\}) = 0.1641$
+\item $m_{Yag}(\Omega) = 0.3360$
+\end{itemize}
+
+\section*{Ключевые отличия}
+
+\begin{itemize}
+\item \textbf{Демпстер}: конфликт → нормализация (усиление согласия)
+\item \textbf{Ягер}: конфликт → незнание (осторожность)
+\item $\text{Pl}(A) - \text{Bel}(A)$ = мера неопределенности
+\item $\text{Bel}(A) = 1 - \text{Pl}(A^c)$
+\end{itemize}
+
+\end{document}

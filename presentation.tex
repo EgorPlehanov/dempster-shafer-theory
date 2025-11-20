@@ -1,0 +1,526 @@
+\documentclass[11pt]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T2A]{fontenc}
+\usepackage[english,russian]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{ragged2e}
+\usetikzlibrary{shapes,arrows,positioning}
+
+% Цветовая схема
+\usetheme{Madrid}
+\usecolortheme{seahorse}
+
+% Уменьшаем отступы и размеры
+\setbeamersize{text margin left=3mm, text margin right=3mm}
+\setlength{\leftmargini}{1.5em}
+\setlength{\leftmarginii}{1em}
+\setbeamertemplate{itemize item}{\tiny\raise0.5pt\hbox{$\bullet$}}
+\setbeamertemplate{itemize subitem}{\tiny\raise0.5pt\hbox{$\circ$}}
+
+\title{Теория Демпстера-Шейфера в управлении ИТ-проектами}
+\author{Плеханов Е.С.}
+\institute{СПбПУ, ИКНТ ВШ ПИ}
+\date{2025}
+
+\begin{document}
+
+\begin{frame}[plain]
+    \centering
+    \vspace{0.5cm}
+    
+    {\footnotesize Минобрнауки России \\
+    Санкт-Петербургский политехнический университет Петра Великого \\
+    Институт компьютерных наук и кибербезопасности \\
+    Высшая школа программной инженерии}
+    
+    \vspace{0.5cm}
+    
+    {\Large \textbf{Презентация на тему:}} \\
+    \vspace{0.3cm}
+    {\LARGE \textbf{Теория Демпстера-Шейфера}} \\
+    {\LARGE \textbf{в управлении ИТ-проектами}}
+    
+    \vspace{0.5cm}
+    
+    {\large по дисциплине "Методы принятия решений"}
+    
+    \vspace{0.5cm}
+    
+    \begin{minipage}[t]{0.45\textwidth}
+        \raggedright
+        \footnotesize
+        Руководитель: \\
+        старший преподаватель \\
+        В.А. Пархоменко
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.45\textwidth}
+        \raggedleft
+        \footnotesize
+        Выполнил: \\
+        студент группы 5140903/40101 \\
+        Плеханов Е.С.
+    \end{minipage}
+    
+    \vspace{0.5cm}
+    
+    {\large Санкт-Петербург \\
+    2025}
+\end{frame}
+
+% Слайд 2: Структура доклада
+\begin{frame}{Структура доклада}
+    \footnotesize
+    \begin{enumerate}
+        \item Проблема неопределенности в ИТ-проектах
+        \item Основные понятия теории Демпстера-Шейфера
+        \item Пример 2.1: Кандидаты на должность
+        \item Пример 2.6: Комбинирование экспертных оценок
+        \item Правило Ягера как альтернатива
+        \item Практическая реализация
+        \item Выводы и применение в ИТ
+    \end{enumerate}
+\end{frame}
+
+% Слайд 3: Проблема неопределенности
+\begin{frame}{Проблема неопределенности в ИТ-проектах}
+    \footnotesize
+    \begin{block}{Традиционный подход}
+        \begin{itemize}
+            \item Точечные оценки: ``проект займет 3 месяца''
+            \item Игнорирование неопределенности
+            \item Субъективное усреднение мнений
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Реальность ИТ-проектов}
+        \begin{itemize}
+            \item Эксперты дают разные оценки
+            \item Противоречивые мнения о рисках
+            \item Необходимость объективного комбинирования
+        \end{itemize}
+    \end{block}
+    
+    \begin{alertblock}{Решение}
+        \textbf{Теория Демпстера-Шейфера}:
+        \begin{itemize}
+            \item Интервальные вероятности
+            \item Учет незнания
+            \item Математическое комбинирование
+        \end{itemize}
+    \end{alertblock}
+\end{frame}
+
+% Слайд 4: Основные понятия
+\begin{frame}{Основные понятия теории Демпстера-Шейфера}
+    \scriptsize
+    \begin{block}{Фрейм discernment}
+        \[
+        \Omega = \{\omega_1, \omega_2, \dots, \omega_n\}
+        \]
+        Множество всех возможных исходов
+    \end{block}
+    
+    \begin{block}{Базовая вероятностная функция (BPA)}
+        \[
+        m: 2^{\Omega} \rightarrow [0,1], \quad m(\emptyset) = 0, \quad \sum m(A) = 1
+        \]
+    \end{block}
+    
+    \begin{block}{Функция доверия (Belief)}
+        \[
+        \text{Bel}(A) = \sum_{B \subseteq A} m(B)
+        \]
+    \end{block}
+    
+    \begin{block}{Функция правдоподобия (Plausibility)}
+        \[
+        \text{Pl}(A) = \sum_{B \cap A \neq \emptyset} m(B)
+        \]
+    \end{block}
+\end{frame}
+
+% Слайд 5: Пример 2.1 - Условие
+\begin{frame}{Пример 2.1: Кандидаты на должность}
+    \footnotesize
+    \begin{block}{Условие задачи}
+        \textbf{4 кандидата}: $\Omega = \{1, 2, 3, 4\}$ \\
+        \textbf{10 экспертов}:
+        
+        \begin{tabular}{|l|c|c|}
+            \hline
+            Мнение экспертов & Множество & Количество \\
+            \hline
+            ``Кандидат 1'' & $\{1\}$ & 5 \\
+            ``Кандидат 1 или 2'' & $\{1,2\}$ & 2 \\
+            ``Кандидат 3'' & $\{3\}$ & 3 \\
+            \hline
+        \end{tabular}
+    \end{block}
+    
+    \begin{block}{Базовые вероятности}
+        \[
+        m(\{1\}) = 0.5, \quad m(\{1,2\}) = 0.2, \quad m(\{3\}) = 0.3
+        \]
+    \end{block}
+\end{frame}
+
+% Слайд 6: Пример 2.1 - Вычисления
+\begin{frame}{Пример 2.1: Вычисления функций доверия}
+    \footnotesize
+    \begin{block}{Результаты для каждого кандидата}
+        \begin{itemize}
+            \item \textbf{Кандидат 1:}
+            $\text{Bel}=0.5$, $\text{Pl}=0.7$, Интервал: $[0.5, 0.7]$
+            
+            \item \textbf{Кандидат 2:}
+            $\text{Bel}=0.0$, $\text{Pl}=0.2$, Интервал: $[0.0, 0.2]$
+            
+            \item \textbf{Кандидат 3:}
+            $\text{Bel}=0.3$, $\text{Pl}=0.3$, Интервал: $[0.3, 0.3]$
+            
+            \item \textbf{Кандидат 4:}
+            $\text{Bel}=0.0$, $\text{Pl}=0.0$, Интервал: $[0.0, 0.0]$
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Интерпретация}
+        \begin{itemize}
+            \item Кандидат 1: уверенность + неопределенность
+            \item Кандидат 2: ``может быть'' (не знаем)
+            \item Кандидат 3: полная определенность
+            \item Кандидат 4: невозможно
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+
+% Слайд 7: Комбинирование свидетельств
+\begin{frame}{Комбинирование свидетельств: Проблема ИТ-проекта}
+    \footnotesize
+    \begin{block}{Типичная ситуация в ИТ}
+        \begin{itemize}
+            \item \textbf{Команда разработки}: ``3-4 месяца''
+            \item \textbf{Команда тестирования}: ``4-5 месяцев''
+            \item \textbf{Менеджер}: ``2 месяца''
+        \end{itemize}
+    \end{block}
+    
+    \begin{alertblock}{Проблема}
+        Как объективно объединить противоречивые оценки?
+    \end{alertblock}
+    
+    \begin{block}{Решение}
+        \textbf{Правило комбинирования Демпстера}:
+        \begin{itemize}
+            \item Математическое объединение
+            \item Учет конфликтов
+            \item Объективный результат
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+% Слайд 8: Пример 2.6 - Условие
+\begin{frame}{Пример 2.6: Комбинирование экспертных оценок}
+    \scriptsize
+    \begin{block}{Условие задачи}
+        \textbf{Предприятия}: $\Omega = \{1, 2, 3, 4\}$
+        
+        \textbf{Источник 1} (8 экспертов):
+        \begin{itemize}
+            \item 5 экспертов: предприятие 1 $\rightarrow \{1\}$
+            \item 3 эксперта: предприятие 2 или 3 $\rightarrow \{2,3\}$
+        \end{itemize}
+        
+        \textbf{Источник 2} (16 экспертов):
+        \begin{itemize}
+            \item 8 экспертов: предприятие 1 или 2 $\rightarrow \{1,2\}$
+            \item 7 экспертов: предприятие 3 $\rightarrow \{3\}$
+            \item 1 эксперт: предприятие 4 $\rightarrow \{4\}$
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Базовые вероятности}
+        \[
+        m_1(\{1\}) = 0.625, \quad m_1(\{2,3\}) = 0.375
+        \]
+        \[
+        m_2(\{1,2\}) = 0.5, \quad m_2(\{3\}) = 0.4375, \quad m_2(\{4\}) = 0.0625
+        \]
+    \end{block}
+\end{frame}
+
+% Слайд 9: Правило Демпстера
+\begin{frame}{Правило комбинирования Демпстера}
+    \scriptsize
+    \begin{block}{Математическая формула}
+        \[
+        m_{12}(A) = \frac{1}{1-K} \sum_{B \cap C = A} m_1(B) \cdot m_2(C)
+        \]
+        где 
+        \[
+        K = \sum_{B \cap C = \emptyset} m_1(B) \cdot m_2(C)
+        \]
+    \end{block}
+    
+    \begin{block}{Псевдокод алгоритма}
+        \begin{enumerate}
+            \item Вычислить пересечения $B \cap C$
+            \item Найти конфликт $K$
+            \item Для каждого $A$: вычислить $m_{12}(A)$
+            \item Нормализовать на $(1-K)$
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+% Слайд 10: Пример 2.6 - Вычисления
+\begin{frame}{Пример 2.6: Вычисления}
+    \tiny
+    \begin{block}{Таблица пересечений}
+        \centering
+        \begin{tabular}{|c|c|c|}
+            \hline
+            & $m_1(\{1\}) = 0.625$ & $m_1(\{2,3\}) = 0.375$ \\
+            \hline
+            $m_2(\{1,2\}) = 0.5$ & $\{1\}$ & $\{2\}$ \\
+            \hline
+            $m_2(\{3\}) = 0.4375$ & $\emptyset$ & $\{3\}$ \\
+            \hline
+            $m_2(\{4\}) = 0.0625$ & $\emptyset$ & $\emptyset$ \\
+            \hline
+        \end{tabular}
+    \end{block}
+    
+    \begin{block}{Вычисление конфликта}
+        \[
+        K = 0.625 \cdot 0.4375 + 0.625 \cdot 0.0625 + 0.375 \cdot 0.0625 = 0.336
+        \]
+    \end{block}
+    
+    \begin{block}{Результат комбинирования}
+        \[
+        m_{12}(\{1\}) = 0.4706, \quad m_{12}(\{2\}) = 0.2824, \quad m_{12}(\{3\}) = 0.2470
+        \]
+    \end{block}
+\end{frame}
+
+% Слайд 11: Парадокс Заде
+\begin{frame}{Проблема правила Демпстера: Парадокс Заде}
+    \footnotesize
+    \begin{block}{Медицинский пример}
+        \textbf{Врач 1:}
+        \begin{itemize}
+            \item Менингит: $m=0.99$
+            \item Опухоль мозга: $m=0.01$
+        \end{itemize}
+        
+        \textbf{Врач 2:}
+        \begin{itemize}
+            \item Сотрясение: $m=0.99$
+            \item Опухоль мозга: $m=0.01$
+        \end{itemize}
+    \end{block}
+    
+    \begin{alertblock}{Результат комбинирования}
+        \[
+        \text{Bel}(опухоль) = 1.0
+        \]
+        Оба врача считали опухоль маловероятной!
+    \end{alertblock}
+    
+    \begin{block}{Проблема}
+        Правило Демпстера усиливает редкие совпадения
+    \end{block}
+\end{frame}
+
+% Слайд 12: Правило Ягера
+\begin{frame}{Правило Ягера: Альтернативный подход}
+    \scriptsize
+    \begin{block}{Философия Ягера}
+        ``Конфликт → незнание, а не усиление''
+    \end{block}
+    
+    \begin{block}{Математическая формула}
+        \[
+        q(A) = \sum_{B \cap C = A} m_1(B) \cdot m_2(C)
+        \]
+        \[
+        m_{Yag}(A) = q(A) \quad \text{для } A \neq \Omega, A \neq \emptyset
+        \]
+        \[
+        m_{Yag}(\Omega) = q(\Omega) + q(\emptyset)
+        \]
+    \end{block}
+    
+    \begin{block}{Ключевое отличие}
+        Конфликт переносится в универсальное множество $\Omega$ (``не знаю'')
+    \end{block}
+\end{frame}
+
+% Слайд 13: Сравнение методов
+\begin{frame}{Сравнение Демпстера и Ягера}
+    \scriptsize
+    \begin{block}{Результаты для примера 2.6}
+        \centering
+        \begin{tabular}{|c|c|c|c|}
+            \hline
+            Множество & Демпстер & Ягер & Разница \\
+            \hline
+            $\{1\}$ & 0.4706 & 0.3125 & -0.1581 \\
+            $\{2\}$ & 0.2824 & 0.1875 & -0.0949 \\
+            $\{3\}$ & 0.2470 & 0.1641 & -0.0829 \\
+            $\Omega$ & 0.0000 & 0.3360 & +0.3360 \\
+            \hline
+        \end{tabular}
+    \end{block}
+    
+    \begin{block}{Интерпретация}
+        \begin{itemize}
+            \item \textbf{Демпстер}: усиливает согласованные свидетельства
+            \item \textbf{Ягер}: признает незнание (33.6\% → ``не знаю'')
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Когда что использовать?}
+        \begin{itemize}
+            \item Демпстер: надежные источники, нужно решение
+            \item Ягер: ненадежные источники, важна осторожность
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+% Слайд 14: Практическая реализация
+\begin{frame}{Практическая реализация}
+    \scriptsize
+    \begin{block}{Архитектура программы}
+        \begin{itemize}
+            \item \texttt{main.py} - главный файл приложения
+            \item \texttt{dempster\_core.py} - ядро теории Д-Ш
+            \item \texttt{examples.py} - реализация примеров из книги
+            \item \texttt{visualizer.py} - визуализация результатов
+        \end{itemize}
+    \end{block}
+
+    \begin{minipage}{0.9\textwidth}
+    \begin{block}{Основные возможности}
+        \begin{itemize}
+            \item Консольное меню для выбора примеров
+            \item Автоматическая визуализация результатов
+            \item Сравнение методов комбинирования
+            \item Подробные текстовые отчеты
+        \end{itemize}
+    \end{block}
+    
+    \begin{exampleblock}{Пример вывода программы}
+        \scriptsize
+        \texttt{>>> Пример 2.1: Кандидаты на должность} \\
+        \texttt{Базовые вероятности: m(\{1\})=0.5, m(\{1,2\})=0.2, m(\{3\})=0.3} \\
+        \texttt{Кандидат 1: Bel=0.5, Pl=0.7, Интервал: [0.5, 0.7]} \\
+        \texttt{Кандидат 2: Bel=0.0, Pl=0.2, Интервал: [0.0, 0.2]}
+    \end{exampleblock}
+
+    \end{minipage}
+\end{frame}
+
+% Слайд 15: Применение в ИТ
+\begin{frame}{Применение в управлении ИТ-проектами}
+    \footnotesize
+    \begin{block}{Оценка сроков проекта}
+        \begin{itemize}
+            \item \textbf{Bel(успех)} - пессимистичная оценка
+            \item \textbf{Pl(успех)} - оптимистичная оценка  
+            \item \textbf{Pl - Bel} - уровень неопределенности
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Анализ рисков}
+        \begin{itemize}
+            \item Комбинирование оценок разных экспертов
+            \item Объективная обработка конфликтов
+            \item Количественная оценка неопределенности
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Принятие решений}
+        \begin{itemize}
+            \item Стратегии для разных уровней уверенности
+            \item Учет ``не знаю'' как valid состояния
+            \item Более обоснованные управленческие решения
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+% Слайд 16: Выводы
+\begin{frame}{Выводы}
+    \footnotesize
+    \begin{block}{Преимущества теории Демпстера-Шейфера}
+        \begin{itemize}
+            \item Работа с неполной информацией
+            \item Интервальные оценки вместо точечных
+            \item Объективное комбинирование мнений
+            \item Учет конфликтов между источниками
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Ограничения}
+        \begin{itemize}
+            \item Сложность вычислений для больших фреймов
+            \item Выбор правила комбинирования требует обоснования
+            \item Интерпретация результатов требует опыта
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Перспективы в ИТ}
+        \begin{itemize}
+            \item Системы поддержки принятия решений
+            \item Управление рисками проектов
+            \item Анализ надежности complex systems
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+% Слайд 17: Источники
+\begin{frame}{Источники}
+    \footnotesize
+    \begin{block}{Литература}
+        \begin{itemize}
+            \item \textbf{Уткин Л.В.} ``Анализ риска и принятие решений при неполной информации'' - Глава 2
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Программная реализация}
+        \begin{itemize}
+            \item \textbf{GitHub репозиторий}: https://github.com/EgorPlehanov/dempster-shafer-theory
+            \item Полный исходный код всех примеров
+            \item Документация и инструкции по установке
+            \item Тестовые данные и примеры использования
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Технологии}
+        \begin{itemize}
+            \item Python 3.8+, Matplotlib, NumPy, Pandas, Seaborn
+            \item LaTeX для документации и презентации
+            \item Git для контроля версий
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+% Слайд 18: Вопросы
+\begin{frame}{Вопросы и ответы}
+    \centering
+    \vspace{1cm}
+    \Huge \textbf{Спасибо за внимание!}
+    
+    \vspace{1cm}
+    \Large Вопросы?
+
+\end{frame}
+
+\end{document}
