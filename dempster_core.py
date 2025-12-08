@@ -72,6 +72,25 @@ class DempsterShafer:
         combined[frozenset()] = 0.0  # Пустое множество всегда 0
         return combined
     
+    def dempster_combine_multiple(self, *bpas: Dict[FrozenSet, float]) -> Dict[FrozenSet, float]:
+        """
+        Правило комбинирования Демпстера для произвольного числа источников
+        Использует ассоциативное свойство: m12...n = ((m1 ⊕ m2) ⊕ m3) ⊕ ... ⊕ mn
+        """
+        if len(bpas) == 0:
+            return {}
+        elif len(bpas) == 1:
+            return bpas[0]
+        
+        # Начинаем с первого источника
+        result = bpas[0]
+        
+        # Последовательно комбинируем с остальными источниками
+        for bpa in bpas[1:]:
+            result = self.dempster_combine(result, bpa)
+        
+        return result
+    
     def discount(self, bpa: Dict[FrozenSet, float], alpha: float) -> Dict[FrozenSet, float]:
         """Правило дисконтирования - раздел 2.6.2"""
         discounted = {}
@@ -108,3 +127,21 @@ class DempsterShafer:
         combined[frozenset()] = 0.0
         
         return combined
+    
+    def yager_combine_multiple(self, *bpas: Dict[FrozenSet, float]) -> Dict[FrozenSet, float]:
+        """
+        Правило комбинирования Ягера для произвольного числа источников
+        """
+        if len(bpas) == 0:
+            return {}
+        elif len(bpas) == 1:
+            return bpas[0]
+        
+        # Начинаем с первого источника
+        result = bpas[0]
+        
+        # Последовательно комбинируем с остальными источниками
+        for bpa in bpas[1:]:
+            result = self.yager_combine(result, bpa)
+        
+        return result
